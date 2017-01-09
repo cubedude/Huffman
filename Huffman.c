@@ -127,11 +127,11 @@ node *find_hash_table_node(const char *symbol,int symbol_size,int create_if_not_
   //
   // find node (use the function memcmp() to compare two symbols
   //
-  
   // ...
+  
   n = hash_table[hash_function(symbol,symbol_size)];
-  //while(n != NULL && strcmp(str,n->key) != 0)
-  while(n != NULL && memcpy(symbol,n->key,n->symbol_size) != 0)
+  while(n != NULL && strcmp(symbol,n->symbol) != 0)
+  //while(n != NULL && memcpy(symbol,n->symbol,n->symbol_size) != 0)
     n = n->next;
   
   //
@@ -597,14 +597,35 @@ void decode(void)
 
 int main(int argc,char **argv)
 {
-  if(argc == 3 && strcmp(argv[1],"-e") == 0)
-    encode(argv[2]);
-  else if(argc == 2 && strcmp(argv[1],"-d") == 0)
-    decode();
-  else
-  {
-    fprintf(stderr,"Usage: %s -e file_name  # input from file_name, output to \"encoded_data\"\n",argv[0]);
-    fprintf(stderr,"       %s -d            # input from \"encoded_data\", output to \"decoded_data\"\n",argv[0]);
+  char option[10];
+  char file[80];
+  
+  printf ("=======================\n \"encode\" - encode file into \"encoded_data\"\n \"decode\" - decode file \"encoded_data\"\n=======================\n");
+	 
+  while(1){
+	  printf ("Enter your option: ");
+	  scanf ("%s", option);
+	  
+	  if(strcmp(option,"e") == 0 || strcmp(option,"encode") == 0)
+	  {		  
+		while(!strlen(file)){
+		  printf ("Insert file name you want to encode: ");
+		  scanf ("%s", file);
+		}
+		encode(file);
+		printf ("File encoded and saved as \"encoded_data\"\n");
+		file[0] = 0;
+	  }
+	  else if(strcmp(option,"d") == 0 || strcmp(option,"decode") == 0)
+	  {
+		printf ("Starting to decode \"encoded_data\"\n");
+		decode();
+		printf ("File decoded and saved as \"decoded_data\"\n");
+	  }
+	  else
+	  {
+		fprintf(stderr,"option \"%s\" is not valid\n",option);
+	  }
   }
   return 0;
 }
