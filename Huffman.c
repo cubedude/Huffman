@@ -286,6 +286,7 @@ node *min_heap_get(void)
 //
 // make Huffman tree
 //
+void write_code_word(FILE *fp_out,char *symbol,int symbol_size);
 
 node *Huffman_root;
 
@@ -376,7 +377,8 @@ void encode_Huffman_node(node *n,FILE *fp_out)
     // not a leaf, output 255 and recurse
     //
     
-    // ...
+    // ... - NO IDEA IF IT IS CORRECT
+    encode_Huffman_node(n->left,fp_out); //should get right side aswell?
   }
   else
   {
@@ -384,7 +386,8 @@ void encode_Huffman_node(node *n,FILE *fp_out)
     // a leaf, output the symbol length followed by the symbol itself
     //
     
-    // ...
+    // ... - NO IDEA IF IT IS CORRECT
+    write_code_word(fp_out,n->symbol,n->symbol_size);
   }
 }
 
@@ -659,7 +662,10 @@ void decode(void)
     // if we are at a leaf, test for termination, output symbol, and reset node pointer
     //
     
-    // ...
+    // ... - DEVELOPING?
+    if(n != NULL){
+	
+	}
     
     //
     // advance to the next bit
