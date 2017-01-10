@@ -10,6 +10,7 @@
 #include <string.h>
 
 #define DEBUG             0
+#define VERBOSE           1
 #define MAX_SYMBOL_SIZE  16
 
 
@@ -178,6 +179,10 @@ int min_heap_size;       // the current min-heap size
 
 void create_min_heap(int max_size)
 {
+  #if VERBOSE != 0
+    printf (".. creating the min_heap \n");
+  #endif
+  
   if(max_size < 100)
     max_size = 100;
   if(max_size > 10000000)
@@ -208,11 +213,13 @@ void min_heap_test(void)
 
 void min_heap_put(node *n)
 {
-	// min_heap_array
-	// min_heap_array_size; // the min-heap array size
-	// min_heap_size;       // the current min-heap size
-	
   // ... - NEEDS TESTING
+  
+  #if VERBOSE != 0
+    printf (".. inserting node (%s) into the min_heap\n",n->symbol);
+  #endif
+  
+  // Allocating more room in the array
   if(min_heap_size) {
 	min_heap_array = realloc(min_heap_array, (min_heap_size + 1) * sizeof(node)) ;
   } else {
@@ -233,6 +240,7 @@ void min_heap_put(node *n)
 }
 
 void swap(node **n1, node **n2) {
+  // Swaping the node places
   node temp = **n1 ;
   **n1 = **n2 ;
   **n2 = temp ;
@@ -252,20 +260,26 @@ void reorder_heap(int i) {
 node *min_heap_get(void)
 {
   // ... - NEEDS TESTING
+  
+  #if VERBOSE != 0
+    printf (".. getting the first element from min_heap\n");
+  #endif
+  
   node *ret;
   if(min_heap_size) {
 	ret = min_heap_array[0];
 	min_heap_array[0] = min_heap_array[--(min_heap_size)] ;
 	min_heap_array = realloc(min_heap_array, min_heap_size * sizeof(node)) ;
 	reorder_heap(0) ;
+	
+	#if DEBUG != 0
+	  min_heap_test();
+	#endif
+	  return ret;
   } else {
 	free(min_heap_array) ;
   }
-    
-  #if DEBUG != 0
-	min_heap_test();
-  #endif
-	return ret;
+  return NULL;
 }
 
 
@@ -342,6 +356,10 @@ void make_Huffman_tree(void)
   //
   // build Huffman tree and assign a different binary code to each leaf
   //
+  
+  #if VERBOSE != 0
+    printf (".. building the Huffman tree \n");
+  #endif
   
   // ...
   
@@ -504,6 +522,11 @@ void encode(char *file_name)
     fprintf(stderr,"Unable to create file \"encoded_data\"\n");
     exit(1);
   }
+  
+  #if VERBOSE != 0
+    printf (".. opend the text file and created \"encoded_data\" file\n");
+  #endif
+  
   //
   // initialize (some) global variables
   //
@@ -515,6 +538,11 @@ void encode(char *file_name)
   //
   init_hash_table(100000); // 100000 should be more than enough
   count_symbol(symbol,0); // our end of file mark (a symbol with size 0)
+  
+  #if VERBOSE != 0
+    printf (".. starting to make passes on the input file\n");
+  #endif
+  
   for(pass = 1;pass <= 2;pass++)
   {
     rewind(fp_in);
@@ -656,7 +684,11 @@ int main(int argc,char **argv)
   char option[10];
   char file[80];
   
-  printf ("=======================\n \"encode\" - encode file into \"encoded_data\"\n \"decode\" - decode file \"encoded_data\"\n=======================\n");
+  #if VERBOSE != 0
+    printf ("== VERBOSE MODE ON ==\n");
+  #endif
+
+  printf ("==============================================\n \"encode\" - encode file into \"encoded_data\"\n \"decode\" - decode file \"encoded_data\"\n==============================================\n");
 	 
   while(1){
 	  printf ("Enter your option: ");
@@ -664,10 +696,9 @@ int main(int argc,char **argv)
 	  
 	  if(strcmp(option,"e") == 0 || strcmp(option,"encode") == 0)
 	  {		  
-		while(!strlen(file)){
-		  printf ("Insert file name you want to encode: ");
-		  scanf ("%s", file);
-		}
+		printf ("Insert file name you want to encode: ");
+		scanf ("%s", file);
+		  
 		encode(file);
 		printf ("File encoded and saved as \"encoded_data\"\n");
 		file[0] = 0;
