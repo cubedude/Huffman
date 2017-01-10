@@ -127,12 +127,15 @@ node *find_hash_table_node(const char *symbol,int symbol_size,int create_if_not_
   //
   // find node (use the function memcmp() to compare two symbols
   //
-  // ...
   
-  n = hash_table[hash_function(symbol,symbol_size)];
-  while(n != NULL && strcmp(symbol,n->symbol) != 0)
+  // ... - NEEDS TESTING
+  idx = hash_function(symbol,symbol_size);
+  n = hash_table[idx];
   //while(n != NULL && memcpy(symbol,n->symbol,n->symbol_size) != 0)
+  while(n != NULL && strcmp(symbol,n->symbol) != 0)
+  {
     n = n->next;
+  }
   
   //
   // if not found, allocate new node (if requested)
@@ -159,7 +162,9 @@ node *find_hash_table_node(const char *symbol,int symbol_size,int create_if_not_
 
 void count_symbol(char *symbol,int symbol_size)
 {
-  ...
+  // ... - NEEDS TESTING
+  node *n = find_hash_table_node(symbol,symbol_size,1);
+  n->count++;
 }
 
 
@@ -203,19 +208,64 @@ void min_heap_test(void)
 
 void min_heap_put(node *n)
 {
-  ...
-#if DEBUG != 0
-  min_heap_test();
-#endif
+	// min_heap_array
+	// min_heap_array_size; // the min-heap array size
+	// min_heap_size;       // the current min-heap size
+	
+  // ... - NEEDS TESTING
+  if(min_heap_size) {
+	min_heap_array = realloc(min_heap_array, (min_heap_size + 1) * sizeof(node)) ;
+  } else {
+	min_heap_array = malloc(sizeof(node)) ;
+  }
+  
+  // Positioning the node at the right position in the min heap
+  int i = (min_heap_size)++;
+  while(i && n->count < min_heap_array[i / 2]->count) {
+	min_heap_array[i] = min_heap_array[i / 2];
+	i = i / 2;
+  }
+  min_heap_array[i] = n;
+  
+  #if DEBUG != 0
+    min_heap_test();
+  #endif
+}
+
+void swap(node **n1, node **n2) {
+  node temp = **n1 ;
+  **n1 = **n2 ;
+  **n2 = temp ;
+}
+
+void reorder_heap(int i) {
+  int smallest = ((2 * i + 1) < min_heap_array_size && min_heap_array[(2 * i + 1)]->count < min_heap_array[i]->count) ? (2 * i + 1) : i ;
+  if((2 * i + 2) < min_heap_array_size && min_heap_array[(2 * i + 2)]->count < min_heap_array[min_heap_size]->count) {
+	smallest = (2 * i + 2) ;
+  }
+  if(smallest != i) {
+	swap(&(min_heap_array[i]), &(min_heap_array[smallest])) ;
+	reorder_heap(smallest) ;
+  }
 }
 
 node *min_heap_get(void)
 {
-  ...
-#if DEBUG != 0
-  min_heap_test();
-#endif
-  return n;
+  // ... - NEEDS TESTING
+  node *ret;
+  if(min_heap_size) {
+	ret = min_heap_array[0];
+	min_heap_array[0] = min_heap_array[--(min_heap_size)] ;
+	min_heap_array = realloc(min_heap_array, min_heap_size * sizeof(node)) ;
+	reorder_heap(0) ;
+  } else {
+	free(min_heap_array) ;
+  }
+    
+  #if DEBUG != 0
+	min_heap_test();
+  #endif
+	return ret;
 }
 
 
@@ -292,7 +342,9 @@ void make_Huffman_tree(void)
   //
   // build Huffman tree and assign a different binary code to each leaf
   //
-  ...
+  
+  // ...
+  
   Huffman_root->code = (uint64_t)0;
   Huffman_root->code_bits = 0;
   expand_binary_code(Huffman_root);
@@ -305,14 +357,16 @@ void encode_Huffman_node(node *n,FILE *fp_out)
     //
     // not a leaf, output 255 and recurse
     //
-    ...
+    
+    // ...
   }
   else
   {
     //
     // a leaf, output the symbol length followed by the symbol itself
     //
-    ...
+    
+    // ...
   }
 }
 
@@ -576,7 +630,9 @@ void decode(void)
     //
     // if we are at a leaf, test for termination, output symbol, and reset node pointer
     //
-    ...
+    
+    // ...
+    
     //
     // advance to the next bit
     //
