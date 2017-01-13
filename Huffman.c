@@ -1,5 +1,6 @@
 //
-// AED, November 2016
+// Originally: Tomás Oliveira e Silva,
+// Taavi Metsvahi, AED, 2017
 //
 // rudimentary Huffman coder and decoder
 //
@@ -12,7 +13,6 @@
 #define DEBUG             0
 #define VERBOSE           1
 #define MAX_SYMBOL_SIZE  16
-
 
 //
 // the node data structure (with custom memory allocation function)
@@ -377,8 +377,8 @@ void encode_Huffman_node(node *n,FILE *fp_out)
     // not a leaf, output 255 and recurse
     //
     
-    // ... - NO IDEA IF IT IS CORRECT
-    encode_Huffman_node(n->left,fp_out); //should get right side aswell?
+    // ...
+    // encode_Huffman_node(n->left,fp_out); - NO IDEA IF IT IS CORRECT
   }
   else
   {
@@ -386,8 +386,8 @@ void encode_Huffman_node(node *n,FILE *fp_out)
     // a leaf, output the symbol length followed by the symbol itself
     //
     
-    // ... - NO IDEA IF IT IS CORRECT
-    write_code_word(fp_out,n->symbol,n->symbol_size);
+    // ...
+    // write_code_word(fp_out,n->symbol,n->symbol_size); - NO IDEA IF IT IS CORRECT
   }
 }
 
@@ -662,10 +662,7 @@ void decode(void)
     // if we are at a leaf, test for termination, output symbol, and reset node pointer
     //
     
-    // ... - DEVELOPING?
-    if(n != NULL){
-	
-	}
+    // ... 
     
     //
     // advance to the next bit
